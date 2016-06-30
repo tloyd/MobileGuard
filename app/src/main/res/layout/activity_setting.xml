@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_setting"
+        android:text="@string/settings"
+        style="@style/title_style"/>
+    <fragment
+        android:id="@+id/fragment_setting"
+        android:name="cc.springwind.mobileguard.ui.SettingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

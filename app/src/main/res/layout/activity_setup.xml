@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        style="@style/title_style"
+        android:text="1,手机卡绑定"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:layout_margin="5dp"
+        android:text="通过绑定sim卡:\n下次重启手机如果发现sim卡变化,就会发送报警短信"/>
+    <CheckBox
+        android:layout_width="match_parent"
+        android:text="@string/is_bind_sim"
+        android:id="@+id/cb_bind_sim"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:background="@android:drawable/presence_online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:background="@android:drawable/presence_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:background="@android:drawable/presence_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:background="@color/colorGrey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:background="@drawable/bind"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <!-- 图片选择器,在选中和未选中的过程中,切换展示图片 -->
+        <Button
+            android:visibility="gone"
+            style="@style/preBtn"/>
+        <Button
+            style="@style/nextBtn"/>
+    </RelativeLayout>
+</LinearLayout>

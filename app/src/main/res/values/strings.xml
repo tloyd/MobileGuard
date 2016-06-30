@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">360手机卫士</string>
+    <string name="update_dialog_title">更新提示</string>
+    <string name="update_dialog_message">有新版本可用,是否立即更新</string>
+    <string name="update_dialog_positivebutton">更新</string>
+    <string name="update_dialog_negativebutton">取消</string>
+    <string name="splash_activity_versionstr">版本名称</string>
+    <string name="download_notify_title">开始下载</string>
+    <string name="download_notify_text">下载中</string>
+    <string name="download_finished_notify_title">下载完成</string>
+    <string name="download_finished_notify_text">点击安装</string>
+    <string name="download_finished_notify_ticker">下载成功</string>
+    <string name="download_notify_ticker">开始下载</string>
+    <string name="url_error_msg">无法连接服务器</string>
+    <string name="functions">功能</string>
+    <string name="pref_update">是否检测更新</string>
+    <string name="pref_update_summ">设置开启卫士是否检测版本更新</string>
+    <string name="settings">设置</string>
+    <string name="set_password">创建密码</string>
+    <string name="create_pwd">创建</string>
+    <string name="cancel_pwd">取消</string>
+    <string name="confirm_pwd">确认密码</string>
+    <string name="confirm">确认</string>
+    <string name="input_pwd">输入密码</string>
+    <string name="is_bind_sim">是否绑定sim卡</string>
+    <string name="choose_contact">选择联系人</string>
+</resources>
