@@ -2,8 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
+        android:defaultValue="true"
         android:key="pref_update"
-        android:title="@string/pref_update"
         android:summary="@string/pref_update_summ"
-        android:defaultValue="true" />
+        android:title="@string/pref_update"/>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_comming_call_location"
+        android:summary="@string/pref_comming_call_location_summ"
+        android:title="@string/pref_comming_call_location"/>
+    <ListPreference
+        android:defaultValue="@string/pref_toast_style_option_default_value"
+        android:dialogTitle="@string/pref_toast_style_title"
+        android:entries="@array/pref_toast_style_options"
+        android:entryValues="@array/pref_toast_style_options_values"
+        android:key="pref_toast_style"
+        android:summary="@string/pref_toast_style_summ"
+        android:title="@string/pref_toast_style"/>
+    <PreferenceScreen
+        android:key="pref_toast_position"
+        android:summary="@string/pref_toast_position_summ"
+        android:title="@string/pref_toast_position">
+        <intent
+            android:targetClass="cc.springwind.mobileguard.ui.SetToastPositionActivity"
+            android:targetPackage="cc.springwind.mobileguard"/>
+    </PreferenceScreen>
 </PreferenceScreen>

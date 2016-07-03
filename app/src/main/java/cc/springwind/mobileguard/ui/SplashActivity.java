@@ -211,9 +211,13 @@ public class SplashActivity extends BaseActivity {
         initAddressDB("address.db");
     }
 
+    /**
+     * 将assets中的数据库文件读取到应用内存中去
+     *
+     * @param dbName
+     */
     private void initAddressDB(String dbName) {
         File files = getFilesDir();
-        System.out.println("-->>firstinitAddressDB");
         File file = new File(files, dbName);
         if (file.exists()) {
             return;
@@ -230,7 +234,6 @@ public class SplashActivity extends BaseActivity {
             while ((temp = mInputStream.read(bs)) != -1) {
                 mFileOutputStream.write(bs, 0, temp);
             }
-            System.out.println("-->>initAddressDB");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

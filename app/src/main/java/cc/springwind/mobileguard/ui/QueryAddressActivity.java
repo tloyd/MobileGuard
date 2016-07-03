@@ -2,6 +2,7 @@ package cc.springwind.mobileguard.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -91,6 +92,8 @@ public class QueryAddressActivity extends BaseActivity {
             Animation shake = AnimationUtils.loadAnimation(
                     getApplicationContext(), R.anim.shake);
             etPhone.startAnimation(shake);
+            Vibrator mVibrator= (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            mVibrator.vibrate(500);
         }
     }
 }

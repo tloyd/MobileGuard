@@ -1,7 +1,12 @@
 package cc.springwind.mobileguard.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,8 @@ import cc.springwind.mobileguard.utils.SpTool;
 
 public class MainActivity extends BaseActivity {
 
+    private static final int MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 1;
+    private static final int MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW = 2;
     @InjectView(R.id.gv_home)
     GridView gvHome;
     private String[] mFunctions;
@@ -33,6 +40,58 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         initUI();
+        initPermission();
+    }
+
+    /**
+     * 初始化用户权限
+     */
+    private void initPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECEIVE_SMS)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECEIVE_SMS},
+                        MY_PERMISSIONS_REQUEST_RECEIVE_SMS);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SYSTEM_ALERT_WINDOW)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
+                        MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_PHONE_STATE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_PHONE_STATE},
+                        MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_RECEIVE_SMS:
+                break;
+            case MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW:
+                break;
+        }
     }
 
     protected void initUI() {
@@ -88,7 +147,7 @@ public class MainActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(confirmPsd)) {
                     String psd = SpTool.getString(getApplicationContext(), Constants.PASSWORD, "");
                     if (psd.equals(MD5Tool.getMD5EncodeWithSalt(confirmPsd))) {
-                        intent2Activity(SetupActivity.class);
+                        intent2Activity(SetupOverActivity.class);
                         confirmPwdDialog.dismiss();
                     } else {
                         // TODO: 2016/6/25 0025
@@ -125,9 +184,10 @@ public class MainActivity extends BaseActivity {
 
                 if (!TextUtils.isEmpty(psd) && !TextUtils.isEmpty(confirmPsd)) {
                     if (psd.equals(confirmPsd)) {
-                        intent2Activity(SetupOverActivity.class);
+                        intent2Activity(SetupActivity.class);
                         createPwdDialog.dismiss();
-                        SpTool.putString(getApplicationContext(), Constants.PASSWORD, MD5Tool.getMD5EncodeWithSalt(psd));
+                        SpTool.putString(getApplicationContext(), Constants.PASSWORD, MD5Tool.getMD5EncodeWithSalt
+                                (psd));
                     } else {
                         // TODO: 2016/6/25 0025
                         showToast(getApplicationContext(), "密码错误");
@@ -174,7 +234,6 @@ public class MainActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.ivIcon.setImageResource(mFunctionImages[position]);
-            System.out.println("-->>" + mFunctions[position]);
             holder.tvName.setText(mFunctions[position]);
             return convertView;
         }

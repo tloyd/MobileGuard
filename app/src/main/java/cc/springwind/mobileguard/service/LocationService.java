@@ -32,12 +32,6 @@ public class LocationService extends Service {
                 .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission
                 .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         mLocationManager.requestLocationUpdates(bestProvider, 0, 0, mLocationListener);
@@ -52,8 +46,9 @@ public class LocationService extends Service {
             //纬度
             double latitude = location.getLatitude();
             //4,发送短信(添加权限)
-            /*SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage("5556", null, "longitude = " + longitude + ",latitude = " + latitude, null, null);*/
+            /*String urgent_number = SpTool.getString(getApplicationContext(), Constants.URGENT_NUMBER, "");
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(urgent_number, null, "longitude = " + longitude + ",latitude = " + latitude, null, null);*/
             System.out.println("-->>longitude = " + longitude + ",latitude = " + latitude);
         }
 

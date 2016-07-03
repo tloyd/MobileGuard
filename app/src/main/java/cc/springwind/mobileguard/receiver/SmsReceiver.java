@@ -24,7 +24,7 @@ public class SmsReceiver extends DeviceAdminReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //组件对象可以作为是否激活的判断标志
-        mDeviceAdminSample = new ComponentName(context, SmsReceiver.class);
+        mDeviceAdminSample = new ComponentName(context, IDeviceAdminReceiver.class);
         mDPM = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
         boolean setup_over = SpTool.getBoolean(context, Constants.SETUP_OVER, false);
@@ -34,6 +34,7 @@ public class SmsReceiver extends DeviceAdminReceiver {
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) object);
                 String originatingAddress = sms.getOriginatingAddress();
                 String messageBody = sms.getMessageBody();
+                System.out.println("-->>" + messageBody);
                 if (messageBody.contains("#*alarm*#")) {
                     MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.ylzs);
                     mediaPlayer.setLooping(true);
@@ -42,13 +43,13 @@ public class SmsReceiver extends DeviceAdminReceiver {
                 if (messageBody.contains("#*location*#")) {
                     context.startService(new Intent(context, LocationService.class));
                 }
-                if (messageBody.contains("#*lockscrenn*#")) {
+                if (messageBody.contains("#*lockscreen*#")) {
                     //是否开启的判断
                     if (mDPM.isAdminActive(mDeviceAdminSample)) {
                         //激活--->锁屏
                         mDPM.lockNow();
                         //锁屏同时去设置密码
-                        mDPM.resetPassword("123", 0);
+//                        mDPM.resetPassword("123", 0);
                     } else {
                         Toast.makeText(context, "请先激活", Toast.LENGTH_LONG).show();
                     }

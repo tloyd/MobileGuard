@@ -12,27 +12,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import cc.springwind.mobileguard.R;
+import cc.springwind.mobileguard.service.AddressService;
 
 /**
  * Created by Administrator on 2016/6/24 0024.
  */
 public class BaseActivity extends AppCompatActivity {
-    protected static final String PREF_UPDATE="pref_update";
+    protected static final String PREF_UPDATE = "pref_update";
+    protected static final String PREF_COMMING_CALL_LOCATION = "pref_comming_call_location";
 
     protected NotificationManager mNotificationManager;
     protected Toast toast;
     protected SharedPreferences preferences;
+    protected boolean isCommingCallLocationShow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isCommingCallLocationShow = preferences.getBoolean(PREF_COMMING_CALL_LOCATION, false);
+        if (isCommingCallLocationShow) {
+            startService(new Intent(getApplicationContext(), AddressService.class));
+        } else {
+            stopService(new Intent(getApplicationContext(), AddressService.class));
+        }
     }
 
     /**
-     * activity跳转
+     * 显式Intent来执行activity跳转
      *
      * @param targetActivity
      */
@@ -41,6 +51,12 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * 不阻塞显示Toast信息
+     *
+     * @param context
+     * @param msg
+     */
     protected void showToast(Context context, CharSequence msg) {
         if (toast != null)
             toast.setText(msg);
@@ -48,4 +64,10 @@ public class BaseActivity extends AppCompatActivity {
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
+

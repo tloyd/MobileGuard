@@ -24,4 +24,12 @@
     <string name="input_pwd">输入密码</string>
     <string name="is_bind_sim">是否绑定sim卡</string>
     <string name="choose_contact">选择联系人</string>
+    <string name="pref_comming_call_location_summ">设置是否在来电时显示来电号码归属地</string>
+    <string name="pref_comming_call_location">是否开启来电归属地</string>
+    <string name="pref_toast_style">设置来电归属地样式</string>
+    <string name="pref_toast_style_summ">设置来电归属地吐司的样式</string>
+    <string name="pref_toast_style_title">请选择对话框样式</string>
+    <string name="pref_toast_style_option_default_value">0</string>
+    <string name="pref_toast_position">设置来电归属地显示的位置</string>
+    <string name="pref_toast_position_summ">设置Toast位置</string>
 </resources>

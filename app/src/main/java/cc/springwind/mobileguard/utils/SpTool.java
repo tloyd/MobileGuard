@@ -76,4 +76,18 @@ public class SpTool {
             sp = ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
         sp.edit().remove(key).commit();
     }
+
+    public static int getInt(Context ctx, String key, int i) {
+        if (sp == null) {
+            sp = ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
+        }
+        return sp.getInt(key, i);
+    }
+
+    public static void putInt(Context ctx, String key, int i) {
+        if (sp == null) {
+            sp = ctx.getSharedPreferences("config", Context.MODE_PRIVATE);
+        }
+        sp.edit().putInt(key, i).commit();
+    }
 }

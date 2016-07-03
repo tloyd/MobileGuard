@@ -1,7 +1,12 @@
 package cc.springwind.mobileguard.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import cc.springwind.mobileguard.utils.TextCheckTool;
  */
 public class Setup2Activity extends BaseActivity {
 
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     @InjectView(R.id.et_phone_number)
     EditText etPhoneNumber;
     @InjectView(R.id.bt_select_number)
@@ -56,15 +62,36 @@ public class Setup2Activity extends BaseActivity {
 
     @OnClick(R.id.bt_select_number)
     public void onClick() {
-        Intent intent=new Intent(this,ContactsListActivity.class);
-        startActivityForResult(intent,0);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        PERMISSIONS_REQUEST_READ_CONTACTS);
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_CONTACTS:
+                Intent intent = new Intent(this, ContactsListActivity.class);
+                startActivityForResult(intent, 0);
+                break;
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data!=null){
-            String phone = data.getStringExtra("phone").replace("-","").replace(" ","").trim();
+        if (data != null) {
+            String phone = data.getStringExtra("phone").replace("-", "").replace(" ", "").trim();
             etPhoneNumber.setText(phone);
         }
     }
