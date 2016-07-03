@@ -69,14 +69,12 @@ public class SetupActivity extends BaseActivity {
             manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                     != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_PHONE_STATE)) {
-
-                } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_PHONE_STATE},
-                            MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-                }
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_PHONE_STATE},
+                        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+            } else {
+                SpTool.putString(getApplicationContext(), Constants.SIM_SERIAL_NUMBER, manager.getSimSerialNumber
+                        ());
             }
         } else {
             SpTool.putBoolean(getApplicationContext(), Constants.SETUP_OVER, false);
@@ -88,28 +86,17 @@ public class SetupActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
             grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        doNext(requestCode, grantResults);
+    }
 
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    SpTool.putString(getApplicationContext(), Constants.SIM_SERIAL_NUMBER, manager.getSimSerialNumber
-                            ());
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
+    private void doNext(int requestCode, int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                SpTool.putString(getApplicationContext(), Constants.SIM_SERIAL_NUMBER, manager.getSimSerialNumber
+                        ());
+            } else {
+                showToast(this, "没有权限读取sim卡序列号");
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 }

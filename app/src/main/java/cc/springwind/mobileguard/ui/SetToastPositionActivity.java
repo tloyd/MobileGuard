@@ -1,6 +1,7 @@
 package cc.springwind.mobileguard.ui;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,7 @@ import butterknife.InjectView;
 import cc.springwind.mobileguard.R;
 import cc.springwind.mobileguard.base.BaseActivity;
 import cc.springwind.mobileguard.utils.Constants;
+import cc.springwind.mobileguard.utils.LogTool;
 import cc.springwind.mobileguard.utils.SpTool;
 
 /**
@@ -30,6 +32,9 @@ public class SetToastPositionActivity extends BaseActivity {
     private WindowManager mWindowManager;
     private int height;
     private int width;
+    private long[] mHits=new long[2];
+    private int ivleft;
+    private int ivtop;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +51,7 @@ public class SetToastPositionActivity extends BaseActivity {
         height = mWindowManager.getDefaultDisplay().getHeight();
         width = mWindowManager.getDefaultDisplay().getWidth();
 
-        RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams
+        final RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams
                 .WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         int locationX = SpTool.getInt(getApplicationContext(), Constants.LOCATION_X, 0);
@@ -123,15 +128,31 @@ public class SetToastPositionActivity extends BaseActivity {
                         startY = (int) event.getRawY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        int ivleft = ivDrag.getLeft();
-                        System.out.println("-->>ivleft:" + ivleft);
-                        int ivtop = ivDrag.getTop();
-                        System.out.println("-->>ivtop:" + ivtop);
+                        ivleft = ivDrag.getLeft();
+                        ivtop = ivDrag.getTop();
+                        LogTool.debug("ivleft:"+ivleft+";ivtop:"+ivtop);
                         SpTool.putInt(getApplicationContext(), Constants.LOCATION_X, ivleft);
                         SpTool.putInt(getApplicationContext(), Constants.LOCATION_Y, ivtop);
                         break;
                 }
-                return true;
+                return false;
+            }
+        });
+
+        ivDrag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
+                mHits[mHits.length-1] = SystemClock.uptimeMillis();
+                if (mHits[0] >= (SystemClock.uptimeMillis()-500)) {
+                    mLayoutParams.leftMargin=width/2-ivDrag.getWidth()/2;
+                    mLayoutParams.topMargin=height/2-ivDrag.getHeight()/2;
+                    ivDrag.setLayoutParams(mLayoutParams);
+                    ivleft = ivDrag.getLeft();
+                    ivtop = ivDrag.getTop();
+                    SpTool.putInt(getApplicationContext(), Constants.LOCATION_X, ivleft);
+                    SpTool.putInt(getApplicationContext(), Constants.LOCATION_Y, ivtop);
+                }
             }
         });
     }

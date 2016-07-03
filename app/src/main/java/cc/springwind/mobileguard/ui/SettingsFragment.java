@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 
 import cc.springwind.mobileguard.R;
 import cc.springwind.mobileguard.service.AddressService;
+import cc.springwind.mobileguard.service.BlackListService;
 
 /**
  * Created by HeFan on 2016/6/25 0025.
@@ -18,6 +19,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         addPreferencesFromResource(R.xml.preferences);
         findPreference("pref_comming_call_location").setOnPreferenceChangeListener(this);
         findPreference("pref_toast_style").setOnPreferenceChangeListener(this);
+        findPreference("pref_black_list").setOnPreferenceChangeListener(this);
     }
 
 
@@ -30,8 +32,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 getActivity().stopService(new Intent(getActivity(), AddressService.class));
             }
         }
-        if (preference.getKey().equals("pref_toast_style")) {
-
+        if (preference.getKey().equals("pref_black_list")) {
+            if ((Boolean) newValue) {
+                getActivity().startService(new Intent(getActivity(), BlackListService.class));
+            } else {
+                getActivity().stopService(new Intent(getActivity(), BlackListService.class));
+            }
         }
         return true;
     }

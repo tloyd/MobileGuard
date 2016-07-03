@@ -1,7 +1,10 @@
 package cc.springwind.mobileguard.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -11,13 +14,15 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import cc.springwind.mobileguard.R;
-import cc.springwind.mobileguard.db.AddressDao;
+import cc.springwind.mobileguard.db.dao.AddressDao;
+import cc.springwind.mobileguard.utils.Constants;
+import cc.springwind.mobileguard.utils.LogTool;
+import cc.springwind.mobileguard.utils.SpTool;
 
 /**
  * Created by HeFan on 2016/7/1.
@@ -38,14 +43,21 @@ public class AddressService extends Service {
         }
     };
     private IPhoneStateListener listener;
+    private OutGoingCallReceiver mOutGoingCallReceiver;
 
     @Override
     public void onCreate() {
         mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         listener = new IPhoneStateListener();
         mTelephonyManager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
-
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+
+        mOutGoingCallReceiver = new OutGoingCallReceiver();
+
+        registerReceiver(mOutGoingCallReceiver,intentFilter);
     }
 
     @Override
@@ -58,12 +70,22 @@ public class AddressService extends Service {
         if (mTelephonyManager != null && listener != null) {
             mTelephonyManager.listen(listener, PhoneStateListener.LISTEN_NONE);
         }
+        if (mOutGoingCallReceiver!=null){
+            unregisterReceiver(mOutGoingCallReceiver);
+        }
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    class OutGoingCallReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showToast(getResultData());
+        }
     }
 
     class IPhoneStateListener extends PhoneStateListener {
@@ -95,8 +117,6 @@ public class AddressService extends Service {
         params.setTitle("Toast");
 
         //指定吐司的所在位置(将吐司指定在左上角)
-        params.gravity = Gravity.CENTER;
-
         //吐司显示效果(吐司布局文件),xml-->view(吐司),将吐司挂在到windowManager窗体上
         toastView = View.inflate(this, R.layout.toast_view, null);
         tv_toast = (TextView) toastView.findViewById(R.id.tv_toast);
@@ -111,7 +131,10 @@ public class AddressService extends Service {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int toastStyleIndex = Integer.parseInt(preferences.getString("pref_toast_style", "0"));
         tv_toast.setBackgroundResource(mDrawableIds[toastStyleIndex]);
-
+        params.x = SpTool.getInt(getApplicationContext(), Constants.LOCATION_X, 0);
+        params.y = SpTool.getInt(getApplicationContext(), Constants.LOCATION_Y, 0);
+        // TODO: 2016/7/3 display position is wrong
+        LogTool.debug("params.x:" + params.x + ";params.y:" + params.y);
         //在窗体上挂在一个view(权限)
         mWindowManager.addView(toastView, params);
 

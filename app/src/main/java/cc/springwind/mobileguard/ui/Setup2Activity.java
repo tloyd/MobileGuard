@@ -64,15 +64,13 @@ public class Setup2Activity extends BaseActivity {
     public void onClick() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_CONTACTS)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        PERMISSIONS_REQUEST_READ_CONTACTS);
-            }
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            Intent intent = new Intent(this, ContactsListActivity.class);
+            startActivityForResult(intent, 0);
         }
-
     }
 
     @Override

@@ -18,7 +18,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import cc.springwind.mobileguard.R;
 import cc.springwind.mobileguard.base.BaseActivity;
-import cc.springwind.mobileguard.db.AddressDao;
+import cc.springwind.mobileguard.db.dao.AddressDao;
 
 /**
  * Created by HeFan on 2016/6/30.

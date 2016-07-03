@@ -32,9 +32,7 @@ public class SmsReceiver extends DeviceAdminReceiver {
             Object[] objects = (Object[]) intent.getExtras().get("pdus");
             for (Object object : objects) {
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) object);
-                String originatingAddress = sms.getOriginatingAddress();
                 String messageBody = sms.getMessageBody();
-                System.out.println("-->>" + messageBody);
                 if (messageBody.contains("#*alarm*#")) {
                     MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.ylzs);
                     mediaPlayer.setLooping(true);

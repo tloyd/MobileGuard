@@ -7,7 +7,7 @@
         android:summary="@string/pref_update_summ"
         android:title="@string/pref_update"/>
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="pref_comming_call_location"
         android:summary="@string/pref_comming_call_location_summ"
         android:title="@string/pref_comming_call_location"/>
@@ -21,10 +21,16 @@
         android:title="@string/pref_toast_style"/>
     <PreferenceScreen
         android:key="pref_toast_position"
-        android:summary="@string/pref_toast_position_summ"
-        android:title="@string/pref_toast_position">
+        android:summary="@string/pref_toast_position"
+        android:title="@string/pref_toast_position_summ">
         <intent
             android:targetClass="cc.springwind.mobileguard.ui.SetToastPositionActivity"
             android:targetPackage="cc.springwind.mobileguard"/>
     </PreferenceScreen>
+    <CheckBoxPreference
+        android:key="pref_black_list"
+        android:defaultValue="false"
+        android:summary="@string/pref_black_list_summ"
+        android:title="@string/pref_black_list"/>
+
 </PreferenceScreen>

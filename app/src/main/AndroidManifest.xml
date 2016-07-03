@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
@@ -30,7 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity"/>
         <activity android:name=".ui.SettingsActivity"/>
         <activity android:name=".ui.SetupActivity"/>
         <activity android:name=".ui.Setup2Activity"/>
@@ -39,9 +39,12 @@
         <activity android:name=".ui.ToolsActivity"/>
         <activity android:name=".ui.QueryAddressActivity"/>
         <activity android:name=".ui.SetToastPositionActivity"/>
+        <activity android:name=".ui.BlackListActivity"/>
+        <activity android:name=".ui.MainActivity"/>
 
         <service android:name=".service.AddressService"/>
         <service android:name=".service.LocationService"/>
+        <service android:name=".service.BlackListService"/>
 
         <receiver android:name=".receiver.BootReceiver">
             <intent-filter>

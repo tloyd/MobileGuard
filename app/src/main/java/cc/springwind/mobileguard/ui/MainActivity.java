@@ -2,11 +2,7 @@ package cc.springwind.mobileguard.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +19,14 @@ import cc.springwind.mobileguard.R;
 import cc.springwind.mobileguard.base.BaseActivity;
 import cc.springwind.mobileguard.utils.Constants;
 import cc.springwind.mobileguard.utils.MD5Tool;
+import cc.springwind.mobileguard.utils.PermissionTool;
 import cc.springwind.mobileguard.utils.SpTool;
 
 public class MainActivity extends BaseActivity {
 
-    private static final int MY_PERMISSIONS_REQUEST_RECEIVE_SMS = 1;
-    private static final int MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW = 2;
     @InjectView(R.id.gv_home)
     GridView gvHome;
+
     private String[] mFunctions;
     private int[] mFunctionImages;
 
@@ -47,61 +43,18 @@ public class MainActivity extends BaseActivity {
      * 初始化用户权限
      */
     private void initPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.RECEIVE_SMS)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.RECEIVE_SMS},
-                        MY_PERMISSIONS_REQUEST_RECEIVE_SMS);
-            }
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.SYSTEM_ALERT_WINDOW)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
-                        MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW);
-            }
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_PHONE_STATE)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_PHONE_STATE},
-                        MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-            grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_RECEIVE_SMS:
-                break;
-            case MY_PERMISSIONS_REQUEST_SYSTEM_ALERT_WINDOW:
-                break;
-        }
+        PermissionTool.checkPermissionIdle(this, Manifest.permission.RECEIVE_SMS);
+        PermissionTool.checkPermissionIdle(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
+        PermissionTool.checkPermissionIdle(this, Manifest.permission.READ_PHONE_STATE);
+        PermissionTool.checkPermissionIdle(this, Manifest.permission.PROCESS_OUTGOING_CALLS);
     }
 
     protected void initUI() {
         // TODO: 2016/6/25 0025 国际化
         mFunctions = new String[]{"手机防盗", "通信卫士", "软件管理", "进程管理", "流量统计", "手机杀毒", "缓存清理", "高级工具", "设置中心"};
-        mFunctionImages = new int[]{R.drawable.home_safe, R.drawable.home_callmsgsafe,
-                R.drawable.home_apps, R.drawable.home_taskmanager,
-                R.drawable.home_netmanager, R.drawable.home_trojan,
+        mFunctionImages = new int[]{R.drawable.home_safe, R.drawable.home_callmsgsafe, R.drawable.home_apps,
+                R.drawable.home_taskmanager, R.drawable.home_netmanager, R.drawable.home_trojan,
                 R.drawable.home_sysoptimize, R.drawable.home_tools, R.drawable.home_settings};
-
         GridViewAdapter adapter = new GridViewAdapter();
         gvHome.setAdapter(adapter);
         gvHome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,7 +64,9 @@ public class MainActivity extends BaseActivity {
                     case 0:
                         showDialog();
                         break;
-
+                    case 1:
+                        intent2Activity(BlackListActivity.class);
+                        break;
                     case 7:
                         intent2Activity(ToolsActivity.class);
                         break;

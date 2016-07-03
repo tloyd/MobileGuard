@@ -176,7 +176,6 @@ public class SplashActivity extends BaseActivity {
             public void onLoading(long total, long current, boolean isDownloading) {
                 Message msg = Message.obtain();
                 int m = (int) ((current * 100 / total));
-                System.out.println("-->>current:" + current + "/total:" + total + "=" + m);
                 msg.what = DOWNLOADING;
                 msg.arg1 = m;
                 mHandler.sendMessage(msg);
@@ -230,7 +229,7 @@ public class SplashActivity extends BaseActivity {
             mFileOutputStream = new FileOutputStream(file);
             //4,每次的读取内容大小
             byte[] bs = new byte[1024];
-            int temp = -1;
+            int temp ;
             while ((temp = mInputStream.read(bs)) != -1) {
                 mFileOutputStream.write(bs, 0, temp);
             }
