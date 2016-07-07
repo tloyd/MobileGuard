@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cc.springwind.mobileguard.R;
 import cc.springwind.mobileguard.base.BaseActivity;
+import cc.springwind.mobileguard.utils.Constants;
+import cc.springwind.mobileguard.utils.SpTool;
 import cc.springwind.mobileguard.utils.StreamTool;
 
 /**
@@ -207,7 +210,26 @@ public class SplashActivity extends BaseActivity {
         ButterKnife.inject(this);
         isUpdate = preferences.getBoolean(PREF_UPDATE, true);
         initData();
-        initAddressDB("address.db");
+        initFocusDB("address.db");
+        initFocusDB("commonnum.db");
+        initFocusDB("antivirus.db");
+        initShortCut();
+    }
+
+    private void initShortCut() {
+        boolean flag = SpTool.getBoolean(getApplicationContext(), Constants.SHORT_CUT, false);
+        if (!flag) {
+            Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON,
+                    BitmapFactory.decodeResource(getResources(), R.drawable.icon));
+            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "360安全卫士");
+            Intent shortCutIntent = new Intent("android.intent.action.HOME");
+            shortCutIntent.addCategory("android.intent.category.DEFAULT");
+
+            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortCutIntent);
+            sendBroadcast(intent);
+            SpTool.putBoolean(this, Constants.SHORT_CUT, true);
+        }
     }
 
     /**
@@ -215,7 +237,7 @@ public class SplashActivity extends BaseActivity {
      *
      * @param dbName
      */
-    private void initAddressDB(String dbName) {
+    private void initFocusDB(String dbName) {
         File files = getFilesDir();
         File file = new File(files, dbName);
         if (file.exists()) {
@@ -229,7 +251,7 @@ public class SplashActivity extends BaseActivity {
             mFileOutputStream = new FileOutputStream(file);
             //4,每次的读取内容大小
             byte[] bs = new byte[1024];
-            int temp ;
+            int temp;
             while ((temp = mInputStream.read(bs)) != -1) {
                 mFileOutputStream.write(bs, 0, temp);
             }
@@ -260,7 +282,7 @@ public class SplashActivity extends BaseActivity {
         if (isUpdate) {
             checkVersion();
         } else {
-            mHandler.sendEmptyMessageDelayed(ENTER_HOME, 2000);
+            mHandler.sendEmptyMessageDelayed(ENTER_HOME, 1000);
         }
     }
 

@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import cc.springwind.mobileguard.R;
 import cc.springwind.mobileguard.base.BaseActivity;
 import cc.springwind.mobileguard.db.dao.BlackListDao;
-import cc.springwind.mobileguard.db.entity.BlackListEntity;
+import cc.springwind.mobileguard.db.entity.BlackListBean;
 
 /**
  * Created by HeFan on 2016/7/3.
@@ -36,7 +36,7 @@ public class BlackListActivity extends BaseActivity {
     @InjectView(R.id.lv_blacknumber)
     ListView lvBlacknumber;
 
-    private List<BlackListEntity> mList;
+    private List<BlackListBean> mList;
     private ListAdapter mAdapter;
     private BlackListDao mDao;
     private Handler mHandler = new Handler() {
@@ -136,7 +136,7 @@ public class BlackListActivity extends BaseActivity {
                     //2,数据库插入当前输入的拦截电话号码
                     mDao.insert(phone, mode + "");
                     //3,让数据库和集合保持同步(1.数据库中数据重新读一遍,2.手动向集合中添加一个对象(插入数据构建的对象))
-                    BlackListEntity blackNumberInfo = new BlackListEntity();
+                    BlackListBean blackNumberInfo = new BlackListBean();
                     blackNumberInfo.phone = phone;
                     blackNumberInfo.mode = mode + "";
                     //4,将对象插入到集合的最顶部
@@ -171,7 +171,7 @@ public class BlackListActivity extends BaseActivity {
         }
 
         @Override
-        public BlackListEntity getItem(int position) {
+        public BlackListBean getItem(int position) {
             return mList.get(position);
         }
 

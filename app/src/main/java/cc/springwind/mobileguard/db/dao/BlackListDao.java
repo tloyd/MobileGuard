@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.springwind.mobileguard.db.BlackListDBHelp;
-import cc.springwind.mobileguard.db.entity.BlackListEntity;
+import cc.springwind.mobileguard.db.entity.BlackListBean;
 
 /**
  * Created by HeFan on 2016/7/3.
@@ -60,13 +60,13 @@ public class BlackListDao {
         db.close();
     }
 
-    public List<BlackListEntity> findAll() {
+    public List<BlackListBean> findAll() {
         SQLiteDatabase db = mBlackListDBHelp.getWritableDatabase();
 
         Cursor cursor = db.query("blacknumber", new String[]{"phone", "mode"}, null, null, null, null, "_id desc");
-        List<BlackListEntity> blackNumberList = new ArrayList<BlackListEntity>();
+        List<BlackListBean> blackNumberList = new ArrayList<BlackListBean>();
         while (cursor.moveToNext()) {
-            BlackListEntity blackNumberInfo = new BlackListEntity();
+            BlackListBean blackNumberInfo = new BlackListBean();
             blackNumberInfo.phone = cursor.getString(0);
             blackNumberInfo.mode = cursor.getString(1);
             blackNumberList.add(blackNumberInfo);
@@ -76,15 +76,15 @@ public class BlackListDao {
         return blackNumberList;
     }
 
-    public List<BlackListEntity> find(int index) {
+    public List<BlackListBean> find(int index) {
         SQLiteDatabase db = mBlackListDBHelp.getWritableDatabase();
 
         Cursor cursor = db.rawQuery("select phone,mode from blacknumber order by _id desc limit ?,20;", new
                 String[]{index + ""});
 
-        List<BlackListEntity> blackNumberList = new ArrayList<BlackListEntity>();
+        List<BlackListBean> blackNumberList = new ArrayList<BlackListBean>();
         while (cursor.moveToNext()) {
-            BlackListEntity blackNumberInfo = new BlackListEntity();
+            BlackListBean blackNumberInfo = new BlackListBean();
             blackNumberInfo.phone = cursor.getString(0);
             blackNumberInfo.mode = cursor.getString(1);
             blackNumberList.add(blackNumberInfo);

@@ -35,4 +35,10 @@
     <string name="news">cnBeta.com成立于 2003 年，是中国领先的即时科技资讯站点，已成为重要的互联网IT消息集散地，提供软件更新，互联网、IT业界资讯、评论、观点和访谈。</string>
     <string name="pref_black_list">设置黑名单</string>
     <string name="pref_black_list_summ">开启黑名单骚扰拦截功能</string>
+    <string name="sms_backup">短信备份</string>
+    <string name="show_system_process">显示系统进程</string>
+    <string name="lock_clear">锁屏清理已开启</string>
+    <string name="process_setting">进程设置</string>
+    <string name="pref_app_lock">程序锁</string>
+    <string name="pref_app_lock_summ">设置是否开启程序锁</string>
 </resources>

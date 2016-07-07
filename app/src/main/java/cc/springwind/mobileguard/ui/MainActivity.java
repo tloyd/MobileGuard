@@ -67,6 +67,18 @@ public class MainActivity extends BaseActivity {
                     case 1:
                         intent2Activity(BlackListActivity.class);
                         break;
+                    case 2:
+                        intent2Activity(AppManagerAcitivity.class);
+                        break;
+                    case 3:
+                        intent2Activity(ProcessManagerActivity.class);
+                        break;
+                    case 5:
+                        intent2Activity(AntiVirusActivity.class);
+                        break;
+                    case 6:
+                        intent2Activity(CacheClearActivity.class);
+                        break;
                     case 7:
                         intent2Activity(ToolsActivity.class);
                         break;

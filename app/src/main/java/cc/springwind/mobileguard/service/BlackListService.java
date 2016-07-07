@@ -5,11 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
+
+import com.android.internal.telephony.ITelephony;
+
+import java.lang.reflect.Method;
 
 import cc.springwind.mobileguard.db.dao.BlackListDao;
 import cc.springwind.mobileguard.utils.LogTool;
@@ -23,6 +30,7 @@ public class BlackListService extends Service {
     private InnerSMSReceiver mInnerSMSReceiver;
     private IPhoneStateListener mIPhoneStateListener;
     private TelephonyManager mTelephonyManager;
+    private IContentObserver observer;
 
     @Override
     public void onCreate() {
@@ -39,7 +47,6 @@ public class BlackListService extends Service {
         mIPhoneStateListener = new IPhoneStateListener();
 
         mTelephonyManager.listen(mIPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-
     }
 
     @Override
@@ -52,6 +59,13 @@ public class BlackListService extends Service {
         if (mInnerSMSReceiver != null) {
             unregisterReceiver(mInnerSMSReceiver);
         }
+        if (mIPhoneStateListener != null) {
+            mTelephonyManager.listen(mIPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
+        if (observer != null) {
+            getContentResolver().unregisterContentObserver(observer);
+        }
+
     }
 
     @Nullable
@@ -61,9 +75,10 @@ public class BlackListService extends Service {
     }
 
     class InnerSMSReceiver extends BroadcastReceiver {
-        // TODO: 2016/7/3 无法拦截到短信
+        // TODO: 2016/7/3 api23无法拦截到短信
         @Override
         public void onReceive(Context context, Intent intent) {
+            LogTool.debug("onReceive");
             Object[] objects = (Object[]) intent.getExtras().get("pdus");
             for (Object object : objects) {
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) object);
@@ -79,6 +94,7 @@ public class BlackListService extends Service {
     class IPhoneStateListener extends PhoneStateListener {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
+            LogTool.debug("onCallStateChanged");
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE:
                     break;
@@ -92,10 +108,44 @@ public class BlackListService extends Service {
     }
 
     private void endCall(String incomingNumber) {
-        int mode=mDao.getMode(incomingNumber);
-        if (mode==2||mode==3){
-            // TODO: 2016/7/3 黑名单挂断未完成
-            LogTool.debug("incomingNumber:"+incomingNumber);
+        int mode = mDao.getMode(incomingNumber);
+        if (mode == 2 || mode == 3) {
+            // TODO: 2016/7/3 api23无法获取来电号码,
+            // TODO: 2016/7/4 黑名单挂断未完成,aidl的导入包找不到
+            LogTool.debug("incomingNumber:" + incomingNumber);
+
+            // 拒接黑名单来电后删除记录
+            observer = new IContentObserver(new Handler(), incomingNumber);
+            getContentResolver().registerContentObserver(Uri.parse("content://call_log/calls"), true, observer);
+            try {
+                Class<?> clazz = Class.forName("android.os.ServiceManager");
+                Method method = clazz.getMethod("getService", String.class);
+                IBinder iBinder= (IBinder) method.invoke(null, Context.TELEPHONY_SERVICE);
+                ITelephony iTelephony = ITelephony.Stub.asInterface(iBinder);
+                iTelephony.endCall();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private class IContentObserver extends ContentObserver {
+        private final String phone;
+
+        /**
+         * Creates a content observer.
+         *
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        public IContentObserver(Handler handler, String phone) {
+            super(handler);
+            this.phone = phone;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            getContentResolver().delete(Uri.parse("content://call_log/calls"), "number=?", new String[]{phone});
         }
     }
 }

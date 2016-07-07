@@ -62,7 +62,7 @@ public class Setup2Activity extends BaseActivity {
 
     @OnClick(R.id.bt_select_number)
     public void onClick() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_CONTACTS},
